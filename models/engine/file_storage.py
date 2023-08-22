@@ -68,7 +68,7 @@ class FileStorage:
         name = type(obj).__name__ + '.' + obj.id
 
         # delete the corresponding object from FileStorage.__objects
-        for item in FileStorage.__objects:
+        for item in FileStorage.__objects.keys():
             if item == name:
                 del FileStorage.__objects[item]
                 self.save()
