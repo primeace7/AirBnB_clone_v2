@@ -132,22 +132,25 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
-        parameter_string = " ".join(token[1:])
-        parameter = re.findall(r'(\S+)=(".*?"|\S+)', parameter_string)
+        parameters = token[1:]
         dict_parameter = {}
-        for key, value in parameter:
-            if value.startswith('""') and value.endswith('""'):
-                value = value[1:-1].replace('_', ' ')
-                value = value.replace('\\"', '"')
-            elif re.match(r'^\d+\.\d+$', value):
-                value = float(value)
-            elif re.match(r'^\d+$', value):
-                value = int(value)
-            else:
-                continue
-            dict_parameter[key] = value
+        i = 0
+        while i < len(parameters):
+            param = parameters[i]
+            if '=' in param:
+                key, value = param.split('=')
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+                elif (key in HBNBCommand.types):
+                    value = HBNBCommand.types[key](value)
+                else:
+                    continue
+
+                dict_parameter[key] = value
+            i += 1
 
         new_instance = HBNBCommand.classes[class_name](**dict_parameter)
+        storage.new(new_instance)
         storage.save()
         print(new_instance.id)
         storage.save()
@@ -345,6 +348,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
