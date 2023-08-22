@@ -1,16 +1,27 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
+    classes = {
+                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review}
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        if cls is None:
+        if cls is None or (f'{cls}' not in type(self).classes):
             return FileStorage.__objects
         else:
             filtered = {}
@@ -35,19 +46,6 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -61,7 +59,7 @@ class FileStorage:
         '''
         delete an instance of type obj from the FileStorage
         '''
-        if obj is None:
+        if obj is None or (type(obj).__name__ not in type(self).classes):
             return
 
         # get the name of obj as it's stored in FileStorage.__objects
