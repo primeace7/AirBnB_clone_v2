@@ -14,12 +14,8 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         else:
-            filtered = {}
-            filtered.update(FileStorage.__objects)
-            for key in filtered.keys():
-                if f'{cls}' not in key:
-                    type(self).delete(filtered[key])
-            return filtered
+            return {key: val for key, val in FileStorage.__objects.items()
+                    if isinstance(val, cls)}
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -59,18 +55,9 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        '''
+        """
         delete an instance of type obj from the FileStorage
-        '''
-        if obj is None:
-            return
-
-        # get the name of obj as it's stored in FileStorage.__objects
-        name = type(obj).__name__ + '.' + obj.id
-
-        # delete the corresponding object from FileStorage.__objects
-        for item in FileStorage.__objects.keys():
-            if item == name:
-                del FileStorage.__objects[item]
-                self.save()
-                return
+        """
+        obj_key = obj.__class__.__name__ + '.' + obj.id
+        if obj is not None and obj_key in self.__objects:
+            del self.__objects[obj_key]
