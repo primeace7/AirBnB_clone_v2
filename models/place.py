@@ -4,6 +4,7 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
+from os import getenv
 
 
 class Place(BaseModel, Base):
@@ -32,3 +33,17 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        reviews = relationship('Review', back_populates='places')
+    else:
+        @property
+        def reviews(self):
+            """Getter attribute reviews that returns the list of Review
+            instances with place_id equals to the current Place.id
+            """
+            list_of_reviews = []
+            for review in models.storage.all(Review).values():
+                if review.place.id == self.id:
+                    list_of_reviews.append(review)
+            return list_of_reviews
