@@ -33,10 +33,9 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+    reviews = relationship("Review", backref="place", cascade="delete")
 
-    if getenv("HBNB_TYPE_STORAGE") == "db":
-        reviews = relationship('Review', back_populates='places')
-    else:
+    if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def reviews(self):
             """Getter attribute reviews that returns the list of Review
