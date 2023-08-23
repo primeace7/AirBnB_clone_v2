@@ -58,6 +58,9 @@ class FileStorage:
         """
         delete an instance of type obj from the FileStorage
         """
-        obj_key = obj.__class__.__name__ + '.' + obj.id
-        if obj is not None and obj_key in self.__objects:
-            del self.__objects[obj_key]
+        if obj is None:
+            return
+        else:
+            obj_key = obj.__class__.__name__ + '.' + obj.id
+            if obj and obj_key in self.__objects:
+                del self.__objects[obj_key]
