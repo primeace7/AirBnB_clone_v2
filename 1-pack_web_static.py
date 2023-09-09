@@ -16,7 +16,7 @@ def do_pack():
     # get time of archive creation
     creation_time = datetime.now().strftime('%Y%m%d%H%M%S')
 
-    local('mkdir version')
+    local('mkdir -p version')
 
     path = "version/web_static_{}.tgz".format(creation_time)
 
