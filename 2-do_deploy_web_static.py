@@ -32,6 +32,8 @@ def do_deploy(archive_path):
     tmp_location = '/tmp/web_static_20230909154905.tgz'
     if run('sudo tar -xzf {} -C {}'.format(tmp_location, destination)).failed:
         return False
+    run('sudo mv {}/web_static/* {}/'.format(destination, destination))
+    run('sudo rm -r {}/web_static'.format(destination))
 
     # remove temporary storage file, old symlink from remote
     run('sudo rm -r {}'.format(tmp_location))
