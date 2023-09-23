@@ -6,7 +6,7 @@ create a route that lists all the cities in a state in the /states_list route
 
 from flask import Flask
 from flask import render_template
-from ../models import storage
+from models import storage
 
 
 app = Flask(__name__)
