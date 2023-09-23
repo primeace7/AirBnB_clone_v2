@@ -55,7 +55,7 @@ class FileStorage:
             pass
 
     def close(self):
-        type(self).reload()
+        self.reload()
 
     def delete(self, obj=None):
         """
